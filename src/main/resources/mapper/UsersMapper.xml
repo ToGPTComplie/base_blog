@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.example.base_blog.mapper.UsersMapper">
+    <select id="selectByRegisterInfo" resultType="com.example.base_blog.entity.Users">
+        select username, email, mobile
+        from users
+        <where>
+            username = #{username}
+            <if test="email != null and email != ''">
+                or email = #{email}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                or mobile = #{mobile}
+            </if>
+        </where>
+    </select>
+</mapper>
