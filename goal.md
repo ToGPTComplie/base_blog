@@ -1,14 +1,14 @@
 ### 第一阶段：基建与地基 (Environment & Database)
 *目标：不依赖代码生成器，手写实体类和数据库配置。*
 
-*   [ ] **初始化项目**
+*   [x] **初始化项目**
     *   使用 Spring Initializr 创建项目。
     *   引入依赖：Web, JPA, MySQL Driver, Lombok (可选，建议手写 Getter/Setter 找手感), Validation。
 *   [ ] **设计并创建数据库表 (SQL)**
     *   不要指望 JPA 自动建表（`ddl-auto: update`），先手动设计 SQL 并在数据库执行，然后再写 Entity 去映射它。这是为了恢复你对 DB 结构的敏感度。
-    *   `users` 表：id, username, password, email, nickname, created_at
+    *   `users` 表：id, username, password, email, nickname, created_at (已完成)
     *   `posts` 表：id, user_id, title, content, summary, status (DRAFT/PUBLISHED), created_at, updated_at
-*   [ ] **搭建基础架构**
+*   [x] **搭建基础架构**
     *   创建包结构：`config`, `controller`, `service`, `repository`, `entity`, `dto`, `exception`。
     *   配置 `application.yml` 连接数据库。
 
@@ -17,21 +17,21 @@
 ### 第二阶段：用户与认证 (User & Auth) —— 最难的先做
 *目标：重新掌握 Spring Security 过滤器链，而不是复制一段不明觉厉的代码。*
 
-*   [ ] **用户注册接口**
-    *   [ ] 定义 `UserRegisterRequest` (DTO)，使用 `@NotBlank`, `@Email`, `@Size` 做参数校验。
-    *   [ ] Service 层：检查用户名/邮箱是否重复。
-    *   [ ] **重点**：使用 `BCryptPasswordEncoder` 对密码加密后存入数据库。
-*   [ ] **全局异常处理 (Global Exception Handling)**
-    *   [ ] 手写 `@RestControllerAdvice`。
-    *   [ ] 捕获 `MethodArgumentNotValidException`，返回格式统一的 JSON（例如：`{ "code": 400, "msg": "邮箱格式错误" }`）。
-*   [ ] **Spring Security 集成 (核心挑战)**
-    *   [ ] 实现 `UserDetailsService` 接口，从数据库加载用户信息。
-    *   [ ] 配置 `SecurityFilterChain`：
+*   [x] **用户注册接口**
+    *   [x] 定义 `UserRegisterRequest` (DTO)，使用 `@NotBlank`, `@Email`, `@Size` 做参数校验。
+    *   [x] Service 层：检查用户名/邮箱是否重复。
+    *   [x] **重点**：使用 `BCryptPasswordEncoder` 对密码加密后存入数据库。
+*   [x] **全局异常处理 (Global Exception Handling)**
+    *   [x] 手写 `@RestControllerAdvice`。
+    *   [x] 捕获 `MethodArgumentNotValidException`，返回格式统一的 JSON（例如：`{ "code": 400, "msg": "邮箱格式错误" }`）。
+*   [x] **Spring Security 集成 (核心挑战)**
+    *   [x] 实现 `UserDetailsService` 接口，从数据库加载用户信息。
+    *   [x] 配置 `SecurityFilterChain`：
         *   放行 `/api/auth/**` (注册/登录)。
         *   其他接口全部需要认证。
-    *   [ ] **登录接口**：实现一个返回 JWT (Json Web Token) 的登录接口，或者使用传统的 Session/Cookie 模式（建议复健先用 Session，简单点，通了再改 JWT）。
-*   [ ] **获取当前登录用户信息接口**
-    *   [ ] 从 `SecurityContextHolder` 中获取当前用户 ID。
+    *   [x] **登录接口**：实现一个返回 JWT (Json Web Token) 的登录接口，或者使用传统的 Session/Cookie 模式（建议复健先用 Session，简单点，通了再改 JWT）。
+*   [x] **获取当前登录用户信息接口**
+    *   [x] 从 `SecurityContextHolder` 中获取当前用户 ID。
 
 ---
 
