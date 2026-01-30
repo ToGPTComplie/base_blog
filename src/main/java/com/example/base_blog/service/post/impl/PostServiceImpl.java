@@ -1,6 +1,7 @@
 package com.example.base_blog.service.post.impl;
 
 import com.example.base_blog.dto.PostCreateRequest;
+import com.example.base_blog.dto.PostResponse;
 import com.example.base_blog.entity.PostStatus;
 import com.example.base_blog.entity.Posts;
 import com.example.base_blog.entity.Users;
@@ -9,6 +10,8 @@ import com.example.base_blog.repository.PostsRepository;
 import com.example.base_blog.repository.UsersRepository;
 import com.example.base_blog.service.post.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -64,6 +67,34 @@ public class PostServiceImpl implements PostService {
         }
 
         postsRepository.save(post);
+    }
+
+    @Override
+    public Page<PostResponse> getPostsList(Pageable pageable) {
+        Page<Posts> posts = postsRepository.findAll(pageable);
+        return posts.map(this::convertToResponse);
+    }
+
+    private PostResponse convertToResponse(Posts posts){
+        PostResponse postResponse = new PostResponse();
+        postResponse.setId(posts.getId());
+        postResponse.setTitle(posts.getTitle());
+        postResponse.setSummary(posts.getSummary());
+        postResponse.setStatus(posts.getStatus());
+        postResponse.setPv(posts.getPv());
+        postResponse.setCreateTime(posts.getCreatedAt());
+        postResponse.setUpdateTime(posts.getUpdatedAt());
+
+        if (posts.getAuthor() != null){
+            PostResponse.UserInfo userInfo = new PostResponse.UserInfo();
+            userInfo.setId(posts.getAuthor().getId());
+            userInfo.setUsername(posts.getAuthor().getUsername());
+            userInfo.setNickname(posts.getAuthor().getNickname());
+            postResponse.setAuthor(userInfo);
+
+        }
+
+        return postResponse;
     }
 
     private String getCurrentUsername() {
