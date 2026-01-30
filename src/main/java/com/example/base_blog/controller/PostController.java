@@ -43,7 +43,7 @@ public class PostController {
         return Result.success(postService.getPostsList(pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public Result<PostResponse> getPost(@PathVariable Long id){
         return  Result.success(postService.getPostDetails(id));
     }
