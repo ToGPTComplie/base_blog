@@ -32,7 +32,7 @@ public class PostController {
         return Result.success(post.getId());
     }
 
-    @PostMapping("/{id}/publish")
+    @PostMapping("/publish/{id}")
     public Result publishPosts(@PathVariable Long id){
         postService.publishPost(id);
         return Result.success("文章上传成功");
