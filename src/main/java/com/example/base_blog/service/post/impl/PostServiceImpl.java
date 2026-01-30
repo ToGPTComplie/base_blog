@@ -54,6 +54,25 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
+    public Posts updatePosts(Long id, PostCreateRequest request) {
+        Posts post = postsRepository.findById(id).orElseThrow(() -> new BusinessException(404, "文章不存在"));
+
+        String currentUsername = getCurrentUsername();
+
+        if(!post.getAuthor().getUsername().equals(currentUsername)){
+            throw new BusinessException(NOT_AUTHOR);
+        }
+
+        post.setTitle(request.getTitle());
+        post.setContent(request.getContent());
+        post.setSummary(request.getSummary());
+
+        return  postsRepository.save(post);
+
+    }
+
+    @Override
+    @Transactional
     public void publishPost(Long id) {
         Posts post = postsRepository.findById(id).orElseThrow(() -> new BusinessException(404, "文章不存在"));
 
@@ -72,14 +91,30 @@ public class PostServiceImpl implements PostService {
     @Override
     public Page<PostResponse> getPostsList(Pageable pageable) {
         Page<Posts> posts = postsRepository.findAll(pageable);
-        return posts.map(this::convertToResponse);
+        return posts.map( post -> convertToResponse(post,false));
     }
 
-    private PostResponse convertToResponse(Posts posts){
+    @Override
+    @Transactional
+    public PostResponse getPostDetails(Long id) {
+        Posts post = postsRepository.findById(id).orElseThrow(() -> new BusinessException(404,"文章不存在"));
+
+        postsRepository.incrementPv(id);
+
+        PostResponse postResponse = convertToResponse(post,true);
+        postResponse.setPv(post.getPv()+1);
+
+        return postResponse;
+    }
+
+    private PostResponse convertToResponse(Posts posts, Boolean withContent) {
         PostResponse postResponse = new PostResponse();
         postResponse.setId(posts.getId());
         postResponse.setTitle(posts.getTitle());
         postResponse.setSummary(posts.getSummary());
+        if (withContent){
+            postResponse.setContent(posts.getContent());
+        }
         postResponse.setStatus(posts.getStatus());
         postResponse.setPv(posts.getPv());
         postResponse.setCreateTime(posts.getCreatedAt());

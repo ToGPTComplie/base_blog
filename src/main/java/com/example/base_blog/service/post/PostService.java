@@ -10,7 +10,11 @@ public interface PostService {
 
     Posts createPosts(PostCreateRequest request);
 
+    Posts updatePosts(Long id, PostCreateRequest request);
+
     void publishPost(Long id);
 
     Page<PostResponse> getPostsList(Pageable  pageable);
+
+    PostResponse getPostDetails(Long id);
 }

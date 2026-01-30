@@ -26,6 +26,12 @@ public class PostController {
         return Result.success(post.getId());
     }
 
+    @PostMapping("/update/{id}")
+    public Result updatePosts(@PathVariable Long id, @RequestBody PostCreateRequest request){
+        Posts post = postService.updatePosts(id, request);
+        return Result.success(post.getId());
+    }
+
     @PostMapping("/{id}/publish")
     public Result publishPosts(@PathVariable Long id){
         postService.publishPost(id);
@@ -37,5 +43,8 @@ public class PostController {
         return Result.success(postService.getPostsList(pageable));
     }
 
-
+    @GetMapping("/{id}")
+    public Result<PostResponse> getPost(@PathVariable Long id){
+        return  Result.success(postService.getPostDetails(id));
+    }
 }

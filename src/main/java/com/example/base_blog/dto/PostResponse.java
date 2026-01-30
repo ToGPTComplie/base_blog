@@ -10,6 +10,7 @@ public class PostResponse {
     private Long id;
     private String title;
     private String summary;
+    private String content;
     private PostStatus status;
     private Long pv;
     private LocalDateTime createTime;
