@@ -47,4 +47,10 @@ public class PostController {
     public Result<PostResponse> getPost(@PathVariable Long id){
         return  Result.success(postService.getPostDetails(id));
     }
+
+    @PostMapping("/delete/{id}")
+    public Result deletePost(@PathVariable Long id){
+        postService.deletePost(id);
+        return Result.success("文章删除成功");
+    }
 }

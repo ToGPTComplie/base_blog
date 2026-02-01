@@ -4,7 +4,7 @@
 *   [x] **初始化项目**
     *   使用 Spring Initializr 创建项目。
     *   引入依赖：Web, JPA, MySQL Driver, Lombok (可选，建议手写 Getter/Setter 找手感), Validation。
-*   [ ] **设计并创建数据库表 (SQL)**
+*   [x] **设计并创建数据库表 (SQL)**
     *   不要指望 JPA 自动建表（`ddl-auto: update`），先手动设计 SQL 并在数据库执行，然后再写 Entity 去映射它。这是为了恢复你对 DB 结构的敏感度。
     *   `users` 表：id, username, password, email, nickname, created_at (已完成)
     *   `posts` 表：id, user_id, title, content, summary, status (DRAFT/PUBLISHED), created_at, updated_at
@@ -38,20 +38,20 @@
 ### 第三阶段：核心业务 (Core Content)
 *目标：熟练掌握 JPA 查询、DTO 转换、以及业务逻辑封装。*
 
-*   [ ] **文章发布 (Create)**
-    *   [ ] 入参：标题、内容、简介。
-    *   [ ] 逻辑：自动关联当前登录用户（Author），设置创建时间，初始状态为 `PUBLISHED`。
-*   [ ] **文章修改 (Update)**
-    *   [ ] **权限检查**：这是重点！必须检查**当前登录用户 ID 是否等于文章作者 ID**。如果不等，抛出 `403 Forbidden`。不要相信前端传来的参数，要相信 Session/Token。
-    *   [ ] 更新 `updated_at` 时间戳。
-*   [ ] **文章列表 (Read)**
-    *   [ ] 分页查询：使用 `Pageable` 和 `Page<Post>`。
-    *   [ ] 响应数据优化：列表页**不要**返回 `content` (正文) 字段，只返回标题、简介、作者名、发布时间。这需要你手写 DTO 转换逻辑。
-*   [ ] **文章详情 (Read)**
-    *   [ ] 根据 ID 查询。
-    *   [ ] 顺便实现一个简单的 PV (浏览量) +1 逻辑（即使不精准）。
-*   [ ] **文章删除 (Delete)**
-    *   [ ] 实现**逻辑删除** (Soft Delete)：表中加一个 `is_deleted` 字段，删除时 update 为 1，查询时默认带上 `where is_deleted = 0`。
+*   [x] **文章发布 (Create)**
+    *   [x] 入参：标题、内容、简介。
+    *   [x] 逻辑：自动关联当前登录用户（Author），设置创建时间，初始状态为 `PUBLISHED`。
+*   [x] **文章修改 (Update)**
+    *   [x] **权限检查**：这是重点！必须检查**当前登录用户 ID 是否等于文章作者 ID**。如果不等，抛出 `403 Forbidden`。不要相信前端传来的参数，要相信 Session/Token。
+    *   [x] 更新 `updated_at` 时间戳。
+*   [x] **文章列表 (Read)**
+    *   [x] 分页查询：使用 `Pageable` 和 `Page<Post>`。
+    *   [x] 响应数据优化：列表页**不要**返回 `content` (正文) 字段，只返回标题、简介、作者名、发布时间。这需要你手写 DTO 转换逻辑。
+*   [x] **文章详情 (Read)**
+    *   [x] 根据 ID 查询。
+    *   [x] 顺便实现一个简单的 PV (浏览量) +1 逻辑（即使不精准）。
+*   [x] **文章删除 (Delete)**
+    *   [x] 实现**逻辑删除** (Soft Delete)：表中加一个 `is_deleted` 字段，删除时 update 为 1，查询时默认带上 `where is_deleted = 0`。
 
 ---
 

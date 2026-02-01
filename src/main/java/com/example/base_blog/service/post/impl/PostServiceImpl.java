@@ -17,8 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.example.base_blog.common.ResultCode.NOT_AUTHOR;
-import static com.example.base_blog.common.ResultCode.USER_NOT_FOUND;
+import static com.example.base_blog.common.ResultCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +54,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public Posts updatePosts(Long id, PostCreateRequest request) {
-        Posts post = postsRepository.findById(id).orElseThrow(() -> new BusinessException(404, "文章不存在"));
+        Posts post = postsRepository.findById(id).orElseThrow(() -> new BusinessException(ARTICLE_NOT_EXIT));
 
         String currentUsername = getCurrentUsername();
 
@@ -97,7 +96,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public PostResponse getPostDetails(Long id) {
-        Posts post = postsRepository.findById(id).orElseThrow(() -> new BusinessException(404,"文章不存在"));
+        Posts post = postsRepository.findById(id).orElseThrow(() -> new BusinessException(ARTICLE_NOT_EXIT));
 
         postsRepository.incrementPv(id);
 
@@ -105,6 +104,17 @@ public class PostServiceImpl implements PostService {
         postResponse.setPv(post.getPv()+1);
 
         return postResponse;
+    }
+
+    @Override
+    @Transactional
+    public void deletePost(Long id) {
+        Posts post = postsRepository.findById(id).orElseThrow(() -> new BusinessException(ARTICLE_NOT_EXIT));
+        String currentUsername = getCurrentUsername();
+        if (!post.getAuthor().getUsername().equals(currentUsername)){
+            throw new BusinessException(NOT_AUTHOR);
+        }
+        postsRepository.delete(post);
     }
 
     private PostResponse convertToResponse(Posts posts, Boolean withContent) {

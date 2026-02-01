@@ -14,7 +14,8 @@ public enum ResultCode {
 
     USER_ALREADY_EXIST(1001, "用户已存在"),
     USER_NOT_FOUND(1002, "用户不存在"),
-    NOT_AUTHOR(403, "不是这篇文章的作者");
+    NOT_AUTHOR(403, "不是这篇文章的作者"),
+    ARTICLE_NOT_EXIT(404,"文章不存在");
 
     private final Integer code;
     private final String message;
