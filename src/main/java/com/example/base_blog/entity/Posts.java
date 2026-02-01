@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "posts", indexes = {
@@ -51,6 +52,15 @@ public class Posts {
     @Column(nullable = false)
     private Long pv = 0L;
 
+    @Column(name = "comments_list")
+    @OneToMany(
+            mappedBy = "post",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Comments> comments;
+
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 
@@ -61,4 +71,9 @@ public class Posts {
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    public void addComment(Comments comment){
+        comment.setPost(this);
+        this.comments.add(comment);
+    }
 }

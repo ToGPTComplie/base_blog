@@ -11,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
@@ -53,6 +54,15 @@ public class Users {
     @Column(name = "deleted", nullable = false, length = 1)
     private Boolean deleted = false;
 
+    @OneToMany(
+            mappedBy = "author",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @ToString.Exclude
+    private List<Comments> commentsList;
+
     @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -60,4 +70,9 @@ public class Users {
     @LastModifiedDate
     @Column(name = "updated_at",  nullable = false)
     private LocalDateTime updatedAt;
+
+    public void addComments(Comments comments){
+        comments.setAuthor(this);
+        this.commentsList.add(comments);
+    }
 }
