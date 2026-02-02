@@ -5,6 +5,7 @@ import com.example.base_blog.dto.PostCreateRequest;
 import com.example.base_blog.dto.PostResponse;
 import com.example.base_blog.entity.Posts;
 import com.example.base_blog.service.post.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,13 +22,13 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/create")
-    public Result createPosts(@RequestBody PostCreateRequest request){
+    public Result createPosts(@Valid @RequestBody PostCreateRequest request){
         Posts post = postService.createPosts(request);
         return Result.success(post.getId());
     }
 
     @PostMapping("/update/{id}")
-    public Result updatePosts(@PathVariable Long id, @RequestBody PostCreateRequest request){
+    public Result updatePosts(@PathVariable Long id, @Valid @RequestBody PostCreateRequest request){
         Posts post = postService.updatePosts(id, request);
         return Result.success(post.getId());
     }

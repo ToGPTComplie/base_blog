@@ -4,6 +4,7 @@ import com.example.base_blog.entity.PostStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class PostResponse {
@@ -13,6 +14,7 @@ public class PostResponse {
     private String content;
     private PostStatus status;
     private Long pv;
+    private List<String> tags;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 

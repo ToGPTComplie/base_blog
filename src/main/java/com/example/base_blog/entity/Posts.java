@@ -10,7 +10,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "posts", indexes = {
@@ -59,7 +61,7 @@ public class Posts {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Comments> comments;
+    private Set<Comments> comments;
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
@@ -75,5 +77,23 @@ public class Posts {
     public void addComment(Comments comment){
         comment.setPost(this);
         this.comments.add(comment);
+    }
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "post_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tags> tags =  new HashSet<>();
+
+    public void addTag(Tags tag){
+        this.tags.add(tag);
+        tag.getPosts().add(this);
+    }
+
+    public void removeTag(Tags tag){
+        this.tags.remove(tag);
+        tag.getPosts().remove(this);
     }
 }

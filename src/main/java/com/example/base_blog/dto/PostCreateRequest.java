@@ -1,9 +1,13 @@
 package com.example.base_blog.dto;
 
 import com.example.base_blog.entity.PostStatus;
+import com.example.base_blog.entity.Tags;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
+import java.util.List;
+import java.util.Set;
 
 @Data
 public class PostCreateRequest {
@@ -16,6 +20,8 @@ public class PostCreateRequest {
 
     @NotBlank(message = "内容不为空")
     private String content;
+
+    private List<String> tags;
 
     private PostStatus status;
 }

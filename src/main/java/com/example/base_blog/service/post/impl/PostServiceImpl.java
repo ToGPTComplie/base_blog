@@ -4,9 +4,11 @@ import com.example.base_blog.dto.PostCreateRequest;
 import com.example.base_blog.dto.PostResponse;
 import com.example.base_blog.entity.PostStatus;
 import com.example.base_blog.entity.Posts;
+import com.example.base_blog.entity.Tags;
 import com.example.base_blog.entity.Users;
 import com.example.base_blog.exception.BusinessException;
 import com.example.base_blog.repository.PostsRepository;
+import com.example.base_blog.repository.TagsRepository;
 import com.example.base_blog.repository.UsersRepository;
 import com.example.base_blog.service.post.PostService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.example.base_blog.common.ResultCode.*;
 
 @Service
@@ -25,6 +29,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostsRepository postsRepository;
     private final UsersRepository usersRepository;
+    private final TagsRepository tagsRepository;
 
     @Override
     @Transactional
@@ -48,7 +53,20 @@ public class PostServiceImpl implements PostService {
 
         post.setPv(0L);
 
+        handleTags(post, request.getTags());
+
         return  postsRepository.save(post);
+    }
+
+
+    private void handleTags(Posts post, List<String> tagNames) {
+        if (tagNames == null || tagNames.isEmpty()) {
+            return;
+        }
+        for (String name : tagNames) {
+            Tags tag = tagsRepository.findByName(name).orElseGet(() -> tagsRepository.save(new Tags(name)));
+            post.addTag(tag);
+        }
     }
 
     @Override
@@ -66,7 +84,26 @@ public class PostServiceImpl implements PostService {
         post.setContent(request.getContent());
         post.setSummary(request.getSummary());
 
+        updateTags(post, request.getTags());
+
         return  postsRepository.save(post);
+
+    }
+
+    private void updateTags(Posts post, List<String> newTagsName) {
+        if (newTagsName == null || newTagsName.isEmpty()) {
+            return;
+        }
+
+        List<Tags> tagsToRemove = post.getTags().stream().filter(tag -> !newTagsName.contains(tag.getName())).toList();
+
+        List<String> currentTagName = post.getTags().stream().map(Tags::getName).toList();
+
+        List<String> tagsToAdd = newTagsName.stream().filter(name -> !currentTagName.contains(name)).toList();
+
+        tagsToRemove.forEach(post::removeTag);
+
+        handleTags(post, tagsToAdd);
 
     }
 
@@ -129,6 +166,9 @@ public class PostServiceImpl implements PostService {
         postResponse.setPv(posts.getPv());
         postResponse.setCreateTime(posts.getCreatedAt());
         postResponse.setUpdateTime(posts.getUpdatedAt());
+
+        List<String> tagNames = posts.getTags().stream().map(Tags::getName).toList();
+        postResponse.setTags(tagNames);
 
         if (posts.getAuthor() != null){
             PostResponse.UserInfo userInfo = new PostResponse.UserInfo();
