@@ -17,6 +17,7 @@ client.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
+       localStorage.removeItem('isLoggedIn');
        // Redirect to login if not already there
        if (!window.location.pathname.startsWith('/login') && !window.location.pathname.startsWith('/register')) {
            window.location.href = '/login';

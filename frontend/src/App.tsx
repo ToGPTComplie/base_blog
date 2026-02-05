@@ -4,6 +4,7 @@ import Register from './pages/Register';
 import PostList from './pages/PostList';
 import PostEdit from './pages/PostEdit';
 import PostDetail from './pages/PostDetail';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
@@ -11,10 +12,28 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" element={<PostList />} />
-        <Route path="/post/create" element={<PostEdit />} />
-        <Route path="/post/edit/:id" element={<PostEdit />} />
-        <Route path="/post/:id" element={<PostDetail />} />
+        
+        {/* Protected Routes */}
+        <Route path="/" element={
+          <PrivateRoute>
+            <PostList />
+          </PrivateRoute>
+        } />
+        <Route path="/post/create" element={
+          <PrivateRoute>
+            <PostEdit />
+          </PrivateRoute>
+        } />
+        <Route path="/post/edit/:id" element={
+          <PrivateRoute>
+            <PostEdit />
+          </PrivateRoute>
+        } />
+        <Route path="/post/:id" element={
+          <PrivateRoute>
+            <PostDetail />
+          </PrivateRoute>
+        } />
       </Routes>
     </BrowserRouter>
   );

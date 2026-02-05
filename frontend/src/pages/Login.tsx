@@ -11,6 +11,7 @@ const Login: React.FC = () => {
       const res = await login(values);
       if (res.code === 200) {
         message.success('登录成功');
+        localStorage.setItem('isLoggedIn', 'true');
         navigate('/');
       } else {
         message.error(res.message || '登录失败');

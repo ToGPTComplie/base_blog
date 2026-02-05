@@ -49,6 +49,12 @@ const PostList: React.FC = () => {
           message.error('删除失败');
       }
   }
+  
+  const handleLogout = () => {
+      localStorage.removeItem('isLoggedIn');
+      message.success('退出登录');
+      navigate('/login');
+  }
 
   const columns = [
     {
@@ -104,9 +110,12 @@ const PostList: React.FC = () => {
     <div style={{ padding: 24 }}>
       <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
         <h2>文章列表</h2>
-        <Button type="primary" onClick={() => navigate('/post/create')}>
-          写文章
-        </Button>
+        <Space>
+           <Button onClick={handleLogout}>退出登录</Button>
+           <Button type="primary" onClick={() => navigate('/post/create')}>
+             写文章
+           </Button>
+        </Space>
       </div>
       <Table
         columns={columns}

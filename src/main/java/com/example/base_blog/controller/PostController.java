@@ -40,7 +40,7 @@ public class PostController {
     }
 
     @GetMapping("/get/list")
-    public Result<Page<PostResponse>> getList(@PageableDefault(sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable){
+    public Result<Page<PostResponse>> getList(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
         return Result.success(postService.getPostsList(pageable));
     }
 
